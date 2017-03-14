@@ -10,6 +10,7 @@ public class MenuInputHandler : MonoBehaviour {
     public float repeatSpeed = 0.5f;
     public float scrollingRepeatSpeed = 0.1f;
     public float scrollingRepeatDelay = 3f;
+    public bool wrap = true;
 
     private List<GameObject> buttons;
     private int selectedButtonIndex;
@@ -103,17 +104,35 @@ public class MenuInputHandler : MonoBehaviour {
 
     }
 
-    // next button in our list with wrap around to beginning of list if required
+    // next button in our list with wrap around to beginning of list if desired
     private void SelectNextButton()
     {
-        SelectButton((selectedButtonIndex + 1) % buttons.Count);
+        if (wrap)
+        {
+            SelectButton((selectedButtonIndex + 1) % buttons.Count);
+        } else
+        {
+            int nextButtonIndex = selectedButtonIndex + 1;
+            nextButtonIndex = Mathf.Clamp(nextButtonIndex, 0, buttons.Count - 1);
+            SelectButton(nextButtonIndex);
+        }
+        
     }
 
-    // previous button in our list with wrap around to end of list if required
+    // previous button in our list with wrap around to end of list if desired
     private void SelectPreviousButton()
     {
-        int newSelection = selectedButtonIndex < 1 ? buttons.Count - 1 : selectedButtonIndex - 1;
-        SelectButton(newSelection);
+        if (wrap)
+        {
+            int nextButtonIndex = selectedButtonIndex < 1 ? buttons.Count - 1 : selectedButtonIndex - 1;
+            SelectButton(nextButtonIndex);
+        } else
+        {
+            int nextButtonIndex = selectedButtonIndex - 1;
+            nextButtonIndex = Mathf.Clamp(nextButtonIndex, 0, buttons.Count - 1);
+            SelectButton(nextButtonIndex);
+        }
+
     }
 
     // resets our timer, used when player reverses input/stops providing input
